@@ -3,13 +3,15 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import { ENV } from "./lib/env.js";
+import cookieParser from 'cookie-parser';
 
 
 const app = express();
 const PORT = ENV.PORT;
 
 // middleware
-app.use(express.json());
+app.use(express.json({ limit: "5MB" }));
+app.use(cookieParser());
 
 // routes
 app.use("/api/auth", authRoutes);
