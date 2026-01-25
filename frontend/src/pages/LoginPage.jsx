@@ -2,7 +2,7 @@ import React from 'react'
 
 function LoginPage() {
   return (
-    <div>
+    <div className='text-red-500'>
       LoginPage
     </div>
   )
