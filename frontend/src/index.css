@@ -8,11 +8,7 @@
   box-sizing: border-box;
 }
 
-@property --border-angle {
-  inherits: false;
-  initial-value: 0deg;
-  syntax: "<angle>";
-}
+
 
 .auth-input-label {
   @apply block text-sm font-medium text-slate-300 mb-3;
