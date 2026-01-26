@@ -10,8 +10,9 @@ export const signup = async (req, res) => {
     let { fullName, email, password } = req.body;
 
     // normalize input
-    fullName = typeof fullName === "string" ? fullName.trim() : "";
-    email = typeof email === "string" ? email.trim().toLowerCase() : "";
+    fullName = fullName?.toString().trim() || "";
+    email = email?.toString().trim().toLowerCase() || "";
+    password = password?.toString() || "";
 
     // validation
     if (!fullName || !email || !password) {
@@ -19,12 +20,13 @@ export const signup = async (req, res) => {
     }
 
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters" });
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // stricter email regex
+    const emailRegex =
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
@@ -70,6 +72,7 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
