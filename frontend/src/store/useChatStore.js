@@ -1,43 +1,58 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
+import toast from "react-hot-toast";
 
 export const useChatStore = create((set, get) => ({
   allContacts: [],
   chats: [],
-  activeTab: "chats", // 'chats' or 'contacts'
+  messages: [],
+
+  activeTab: "chats",
   selectedUser: null,
-  isUsersLoading: false,
+
+  isContactsLoading: false,
+  isChatsLoading: false,
   isMessagesLoading: false,
-  isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === "true",
-  toggleSound: () => {
-    const newValue = !get().isSoundEnabled;
-    localStorage.setItem("isSoundEnabled", newValue);
-    set({ isSoundEnabled: newValue });
-  },
+
   setActiveTab: (tab) => set({ activeTab: tab }),
   setSelectedUser: (selectedUser) => set({ selectedUser }),
 
   getAllContacts: async () => {
-    set({ isUsersLoading: true });
+    set({ isContactsLoading: true });
     try {
       const res = await axiosInstance.get("messages/contacts");
-      set({ allContacts: res.data });
+      set({ allContacts: res.data.users });
     } catch (error) {
-      console.error("Error fetching contacts:", error);
+      console.error(error);
     } finally {
-      set({ isUsersLoading: false });
+      set({ isContactsLoading: false });
     }
   },
 
   getMyChatPartners: async () => {
-    set({ isUsersLoading: true });
+    set({ isChatsLoading: true });
     try {
       const res = await axiosInstance.get("messages/chats");
-      set({ chats: res.data });
+      set({ chats: res.data.chatPartners });
     } catch (error) {
-      console.error("Error fetching chat partners:", error);
+      console.error(error);
     } finally {
-      set({ isUsersLoading: false });
+      set({ isChatsLoading: false });
     }
-  }
+  },
+
+  getMessagesByUserId: async (userId) => {
+    if (!userId) return;
+
+    set({ isMessagesLoading: true });
+    try {
+      const res = await axiosInstance.get(`/messages/${userId}`);
+      set({ messages: res.data.messages });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      set({ isMessagesLoading: false });
+    }
+  },
 }));
+

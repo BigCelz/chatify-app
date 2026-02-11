@@ -10,7 +10,7 @@ import NoConversationPlaceholder from "../components/NoConversationPlaceholder";
 function ChatPage() {
   const { activeTab, selectedUser } = useChatStore();
   return (
-    <div className="relative w-full max-w-6xl h-[800px] flex overflow-hidden rounded-2xl">
+    <div className="relative w-full mx-auto max-w-6xl h-[90vh] flex overflow-hidden rounded-2xl ">
       {/* left side */}
       <aside className="w-80 shrink-0 flex flex-col bg-slate-800/50 backdrop-blur-sm border-r border-slate-700/40">
         <ProfileHeader />
